@@ -63,7 +63,9 @@ interface = gr.Interface(
         gr.Textbox(lines=2, placeholder="Type your question here", label="Type your question")
     ],
     outputs="text",
-    css=custom_css
+    css=custom_css,
+    title="Voice Assistant",
+    description="<p style='font-size:24px;text-align:center;'>Ask questions or provide commands using your voice or by typing in the textbox</p>"
 )
 
 # Play the welcome message
