@@ -1,7 +1,6 @@
 import gradio as gr
 import openai
 from decouple import config
-from gtts import gTTS
 import os
 import win32com.client
 import pythoncom
@@ -15,6 +14,12 @@ messages = [
 
 language = 'en'
 
+def play_welcome_message():
+    welcome_message = "Welcome to the voice assistant. You can ask me anything."
+    pythoncom.CoInitialize()
+    speaker = win32com.client.Dispatch("SAPI.SpVoice")
+    speaker.Speak(welcome_message)
+
 # Main method goes here
 def decipher(audio=None, text=None):
     global messages
@@ -23,13 +28,11 @@ def decipher(audio=None, text=None):
         # Using openAI's speech to text model
         audio_file = open(audio, "rb")
         transcript = openai.Audio.transcribe("whisper-1", audio_file)
-        input_text = transcript["text"]
-    elif text:
-        input_text = text
+        user_message = transcript["text"]
     else:
-        return "Please provide either audio or text input."
+        user_message = text
 
-    messages.append({"role": "user", "content": input_text})
+    messages.append({"role": "user", "content": user_message})
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -57,9 +60,14 @@ interface = gr.Interface(
     fn=decipher,
     inputs=[
         gr.Audio(source="microphone", type="filepath", label="Audio"),
-        gr.Textbox(label="Type your question")
+        gr.Textbox(lines=2, placeholder="Type your question here", label="Type your question")
     ],
     outputs="text",
     css=custom_css
 )
+
+# Play the welcome message
+play_welcome_message()
+
+# Launch the Gradio interface
 interface.launch()
