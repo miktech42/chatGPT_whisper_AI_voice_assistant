@@ -1,0 +1,9 @@
+/* Increase the overall text size on the page */
+body {
+    font-size: 18px; /* Adjust this value as needed */
+  }
+
+/* Increase the text size of the audio and output components */
+  input[type="text"], textarea {
+    font-size: 20px !important; /* Adjust this value as needed */
+  }

@@ -13,21 +13,25 @@ messages = [
     {"role": "system", "content": "You are a helpful assistant."},
 ]
 
-
-#  language = 'en'
-
+language = 'en'
 
 # Main method goes here
-def decipher(audio):
+def decipher(audio=None, text=None):
     global messages
 
-    # Using openAI's speech to text model
-    audio_file = open(audio, "rb")
-    transcript = openai.Audio.transcribe("whisper-1", audio_file)
+    if audio:
+        # Using openAI's speech to text model
+        audio_file = open(audio, "rb")
+        transcript = openai.Audio.transcribe("whisper-1", audio_file)
+        input_text = transcript["text"]
+    elif text:
+        input_text = text
+    else:
+        return "Please provide either audio or text input."
 
-    messages.append({"role": "user", "content": transcript["text"]})
+    messages.append({"role": "user", "content": input_text})
 
-    response =  openai.ChatCompletion.create(
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=messages
     )
@@ -36,10 +40,6 @@ def decipher(audio):
     pythoncom.CoInitialize()
     speaker = win32com.client.Dispatch("SAPI.SpVoice")
     speaker.Speak(system_message)
-    # myobj = gTTS(text=system_message, lang=language, slow=False)
-    # myobj.save("welcome.mp3")
-    # # Playing the converted file
-    # os.system("start welcome.mp3")
     messages.append({"role": "assistant", "content": system_message},)
 
     chat_transcript = ""
@@ -49,8 +49,17 @@ def decipher(audio):
 
     return chat_transcript
 
+# Use custom styles sheet
+with open("custom_styles.css", "r") as css_file:
+    custom_css = css_file.read()
 
-# Using Gradio's audio Interface 
-interface = gr.Interface(fn=decipher, inputs=gr.Audio(
-    source="microphone", type="filepath"), outputs="text").launch()
+interface = gr.Interface(
+    fn=decipher,
+    inputs=[
+        gr.Audio(source="microphone", type="filepath", label="Audio"),
+        gr.Textbox(label="Type your question")
+    ],
+    outputs="text",
+    css=custom_css
+)
 interface.launch()
