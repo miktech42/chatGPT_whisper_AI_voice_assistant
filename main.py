@@ -20,6 +20,24 @@ def play_welcome_message():
     speaker = win32com.client.Dispatch("SAPI.SpVoice")
     speaker.Speak(welcome_message)
 
+# Custom CSS string
+custom_css = """
+input[type="text"], textarea {
+    font-size: 20px !important; /* Adjust this value as needed */
+}
+
+/* Add custom CSS style to change the size of the title */
+h1 {
+    font-size: 40px !important; /* Adjust this value as needed */
+}
+
+output {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+}
+"""
+
 # Main method goes here
 def decipher(audio=None, text=None):
     global messages
@@ -50,26 +68,21 @@ def decipher(audio=None, text=None):
         if message['role'] != 'system':
             chat_transcript += message['role'] + ": " + message['content'] + "\n\n"
 
-    return chat_transcript
+# Reset the value of the text_input component
 
-# Use custom styles sheet
-with open("custom_styles.css", "r") as css_file:
-    custom_css = css_file.read()
+    return chat_transcript, ""
 
-interface = gr.Interface(
-    fn=decipher,
-    inputs=[
-        gr.Audio(source="microphone", type="filepath", label="Audio"),
-        gr.Textbox(lines=2, placeholder="Type your question here", label="Type your question")
-    ],
-    outputs="text",
-    css=custom_css,
-    title="Voice Assistant",
-    description="<p style='font-size:24px;text-align:center;'>Ask questions or provide commands using your voice or by typing in the textbox</p>"
-)
+with gr.Blocks(css=custom_css, title="Voice Assistant") as demo:
+    gr.Markdown("<h1 style='text-align: center;'>Voice Assistant</h1>")
+    gr.Markdown("<p style='font-size:28px;text-align:center;'>Ask questions or provide commands using your voice or by typing in the textbox</p>")
+    audio_input = gr.Audio(source="microphone", type="filepath", label="Audio")
+    text_input = gr.Textbox(lines=2, placeholder="Type your question here", label="Type your question")
+    output = gr.Textbox(label="Output Box")
+    submit_btn = gr.Button("Submit")
+    submit_btn.click(fn=decipher, inputs=[audio_input, text_input], outputs=[output, text_input])
 
 # Play the welcome message
 play_welcome_message()
 
 # Launch the Gradio interface
-interface.launch()
+demo.launch()
