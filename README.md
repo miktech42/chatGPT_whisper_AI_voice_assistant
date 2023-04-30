@@ -49,8 +49,10 @@ Installation
 ------------
 
 1.  Clone the repository: `git clone https://github.com/DonGuillotine/chatGPT_whisper_AI_voice_assistant.git`
-2.  Install the required Python packages: `pip install -r requirements.txt`
+2.  Install the required Python packages: `pip install -r requirements-windows.txt` if using Windows, or else `pip install -r requirements.txt`
 3.  Sign up for ChatGPT API key from <https://beta.openai.com/signup/>
+
+4. I personally had to install a couple of extra packages as directed during install. I also have to install and run in a virtual environment
 
 Contributing
 ------------
@@ -60,4 +62,4 @@ Contributions to this project are welcome. If you encounter any bugs or issues, 
 Conclusion
 ----------
 
-The Voice Assistant built with ChatGPT, Whisper API, Gradio, and Microsoft's SpVoice TTS API is a powerful tool that can help with a wide range of tasks, from answering general knowledge questions to scheduling appointments. It is easy to use and can be accessed through a web-based interface.
+The Voice Assistant built with ChatGPT, Whisper API, Gradio, Microsoft's SpVoice TTS API, and Google's gTTS API is a powerful tool that can help with a wide range of tasks, from answering general knowledge questions to scheduling appointments. It is easy to use and can be accessed through a web-based interface.
