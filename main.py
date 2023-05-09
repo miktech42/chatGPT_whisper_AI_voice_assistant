@@ -17,7 +17,7 @@ language = 'en'
 
 # Define a function to play the welcome message
 def play_welcome_message():
-    # Check if operating system is windows
+    # Check if os is windows
     if platform.system() == "Windows":
         try:
             # Initialize pythoncom for audio synthesis
@@ -45,7 +45,7 @@ messages = [
 # Define custom CSS styles for the Gradio interface
 custom_css = """
 input[type="text"], textarea {
-    font-size: 24px !important; /* Adjust this value as needed */
+    font-size: 20px !important; /* Adjust this value as needed */
 }
 
 /* Add custom CSS style to change the size of the title */
@@ -57,7 +57,6 @@ output {
     display: flex;
     flex-direction: column-reverse;
     overflow-y: scroll;
-
 }
 """
 
